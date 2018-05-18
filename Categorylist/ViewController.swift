@@ -54,7 +54,12 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
                 }
                 print("mainlistarray====",self.listArray)
                  print("productlist====",self.productsArray)
-               self.categorytableview.reloadData()
+                let rankingArray = dictcategories.value(forKey: "rankings")  as! NSArray
+                for dict in rankingArray {
+                    self.rankingArray.add(dict as! NSDictionary)
+                }
+                print("rankingArray====",self.rankingArray)
+                 self.categorytableview.reloadData()
                 
             } catch {
                 print("json error: \(error)")
@@ -82,7 +87,7 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 250
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let dict  = self.listArray.object(at: section) as! NSDictionary
@@ -113,9 +118,7 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
 
        var cell: CustomTableViewCell! = tableView.dequeueReusableCell(withIdentifier: identifier) as? CustomTableViewCell
         if indexPath.section == 0 {
-            
-            
-            if cell == nil {
+        if cell == nil {
                 tableView.register(UINib(nibName: "CustomTableViewCell", bundle: nil), forCellReuseIdentifier: identifier)
                 cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? CustomTableViewCell
             }
@@ -128,6 +131,38 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
          cell.pricelabel?.text  = String(format:"%@",(dictvariants.value(forKey: "price") as! NSNumber))
             cell.idlabel?.text  = String(format:"%@",(dictvariants.value(forKey: "id") as! NSNumber))
             
+            for dict  in rankingArray {
+                let dictonary = dict as! NSDictionary
+                let productsArray  = dictonary.value(forKey: "products") as! Array<Any>
+                for object in productsArray{
+                    let productsDictonary = object as! NSDictionary
+                    if let keyString:String = dictonary.value(forKey: "ranking") as? String{
+                        let viewedProductsString = "Most Viewed Products"
+                        if keyString == viewedProductsString {
+                            let productid = productsDictonary.value(forKey: "id") as? String
+                            if dictvariants.value(forKey: "id") as? String == productid {
+                                cell.viewCountLabel?.text = String(format:"Views:%@",(productsDictonary.value(forKey: "view_count") as! NSNumber))
+                            }
+                        }
+                        
+                        let orderedProductsString = "Most OrdeRed Products"
+                        if keyString == orderedProductsString {
+                            let productid = productsDictonary.value(forKey: "id") as? String
+                            if dictvariants.value(forKey: "id") as? String == productid {
+                                cell.orderCountLabel?.text = String(format:"Orders:%@",(productsDictonary.value(forKey: "order_count") as! NSNumber))
+                            }
+                        }
+                        
+                        let sharedProductsString = "Most ShaRed Products"
+                        if keyString == sharedProductsString {
+                            let productid = productsDictonary.value(forKey: "id") as? String
+                            if dictvariants.value(forKey: "id") as? String == productid {
+                                cell.shareCountLabel?.text = String(format:"Shares:%@",(productsDictonary.value(forKey: "shares") as! NSNumber))
+                            }
+                        }
+                    }
+                }
+            }
             
         }
         

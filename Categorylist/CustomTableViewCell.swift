@@ -15,6 +15,9 @@ class CustomTableViewCell: UITableViewCell {
     @IBOutlet var pricelabel: UILabel!
     @IBOutlet var sizelabel: UILabel!
     @IBOutlet var colorlabel: UILabel!
+    @IBOutlet var orderCountLabel: UILabel!
+    @IBOutlet var shareCountLabel: UILabel!
+    @IBOutlet var viewCountLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
